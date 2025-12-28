@@ -98,11 +98,42 @@ footer {
 </footer>
 
 <script>
+const SHEET_ID = "1urNK7qmNWc01pwnHBQz1JJ2YuZj_qmZHhhsjwn39mlE";
+const USERS_TAB = "Users";
+
 function showView(view) {
   document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
   document.getElementById(view).classList.remove('hidden');
+
+  if (view === "explore") {
+    loadLeaderboard();
+  }
+}
+
+async function loadLeaderboard() {
+  const url =
+    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${USERS_TAB}`;
+
+  const res = await fetch(url);
+  const text = await res.text();
+
+  const json = JSON.parse(text.substring(47).slice(0, -2));
+  const rows = json.table.rows;
+
+  let html = "";
+
+  rows.forEach(r => {
+    const username = r.c[1]?.v;
+    if (username) {
+      html += `<p>${username}</p>`;
+    }
+  });
+
+  document.getElementById("leaderboard").innerHTML =
+    html || "No users yet.";
 }
 </script>
+
 
 </body>
 </html>
