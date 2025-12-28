@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Public Portfolio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  background: #f4f4f4;
+}
+header {
+  background: #0b0b0b;
+  color: white;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header a {
+  color: white;
+  margin-left: 16px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+.card {
+  background: white;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+.hidden {
+  display: none;
+}
+.username {
+  font-weight: bold;
+  cursor: pointer;
+}
+footer {
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+  padding: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <strong>Public Portfolio</strong>
+  <nav>
+    <a onclick="showView('home')">Home</a>
+    <a onclick="showView('explore')">Explore</a>
+    <a onclick="showView('join')">Join</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <div id="home" class="view">
+    <div class="card">
+      <h2>Track portfolios. Judge advice by results.</h2>
+      <p>
+        A public portfolio tracking platform.
+        No trading. No money. Just transparency.
+      </p>
+    </div>
+  </div>
+
+  <div id="explore" class="view hidden">
+    <div class="card">
+      <h2>Leaderboard</h2>
+      <div id="leaderboard">Loading…</div>
+    </div>
+  </div>
+
+  <div id="join" class="view hidden">
+    <div class="card">
+      <h2>Join</h2>
+      <p><a href="#" target="_blank">Create profile</a></p>
+      <p><a href="#" target="_blank">Add position</a></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  This site does not provide financial advice.
+  All portfolios are self-reported.
+</footer>
+
+<script>
+function showView(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+  document.getElementById(view).classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>
