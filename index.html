@@ -76,7 +76,13 @@ footer {
   </div>
 
   <div id="explore" class="view hidden">
-    <div class="card">
+   <div id="profile" class="view hidden">
+  <div class="card">
+    <h2 id="profileName"></h2>
+    <div id="positions">Loading positions…</div>
+  </div>
+</div>
+ <div class="card">
       <h2>Leaderboard</h2>
       <div id="leaderboard">Loading…</div>
     </div>
@@ -125,12 +131,42 @@ async function loadLeaderboard() {
   rows.forEach(r => {
     const username = r.c[1]?.v;
     if (username) {
-      html += `<p>${username}</p>`;
+html += `<p class="username" onclick="openProfile('${username}')">${username}</p>`;
     }
   });
 
   document.getElementById("leaderboard").innerHTML =
     html || "No users yet.";
+}
+  function openProfile(username) {
+  showView('profile');
+  document.getElementById('profileName').innerText = username;
+  loadPositions(username);
+}
+  async function loadPositions(username) {
+  const url =
+    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Positions`;
+
+  const res = await fetch(url);
+  const text = await res.text();
+  const json = JSON.parse(text.substring(47).slice(0, -2));
+  const rows = json.table.rows;
+
+  let html = "";
+
+  rows.forEach(r => {
+    const rowUser = r.c[1]?.v;
+    const ticker = r.c[2]?.v;
+    const shares = r.c[3]?.v;
+    const entry = r.c[4]?.v;
+
+    if (rowUser === username) {
+      html += `<p>${ticker} — ${shares} shares @ ${entry}</p>`;
+    }
+  });
+
+  document.getElementById("positions").innerHTML =
+    html || "No positions yet.";
 }
 </script>
 
