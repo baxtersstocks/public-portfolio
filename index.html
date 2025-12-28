@@ -43,6 +43,9 @@ header a {
   font-weight: bold;
   cursor: pointer;
 }
+.username:hover {
+  text-decoration: underline;
+}
 footer {
   font-size: 12px;
   color: #777;
@@ -65,6 +68,7 @@ footer {
 
 <div class="container">
 
+  <!-- HOME -->
   <div id="home" class="view">
     <div class="card">
       <h2>Track portfolios. Judge advice by results.</h2>
@@ -75,19 +79,23 @@ footer {
     </div>
   </div>
 
+  <!-- EXPLORE / LEADERBOARD -->
   <div id="explore" class="view hidden">
-   <div id="profile" class="view hidden">
-  <div class="card">
-    <h2 id="profileName"></h2>
-    <div id="positions">Loading positions…</div>
-  </div>
-</div>
- <div class="card">
+    <div class="card">
       <h2>Leaderboard</h2>
       <div id="leaderboard">Loading…</div>
     </div>
   </div>
 
+  <!-- PROFILE -->
+  <div id="profile" class="view hidden">
+    <div class="card">
+      <h2 id="profileName"></h2>
+      <div id="positions">Loading positions…</div>
+    </div>
+  </div>
+
+  <!-- JOIN -->
   <div id="join" class="view hidden">
     <div class="card">
       <h2>Join</h2>
@@ -104,9 +112,16 @@ footer {
 </footer>
 
 <script>
+/* =========================
+   CONFIG
+========================= */
 const SHEET_ID = "1urNK7qmNWc01pwnHBQz1JJ2YuZj_qmZHhhsjwn39mlE";
 const USERS_TAB = "Users";
+const POSITIONS_TAB = "Positions";
 
+/* =========================
+   NAVIGATION
+========================= */
 function showView(view) {
   document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
   document.getElementById(view).classList.remove('hidden');
@@ -116,13 +131,15 @@ function showView(view) {
   }
 }
 
+/* =========================
+   LEADERBOARD
+========================= */
 async function loadLeaderboard() {
   const url =
     `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${USERS_TAB}`;
 
   const res = await fetch(url);
   const text = await res.text();
-
   const json = JSON.parse(text.substring(47).slice(0, -2));
   const rows = json.table.rows;
 
@@ -131,21 +148,26 @@ async function loadLeaderboard() {
   rows.forEach(r => {
     const username = r.c[1]?.v;
     if (username) {
-html += `<p class="username" onclick="openProfile('${username}')">${username}</p>`;
+      html += `<p class="username" onclick="openProfile('${username}')">@${username}</p>`;
     }
   });
 
   document.getElementById("leaderboard").innerHTML =
     html || "No users yet.";
 }
-  function openProfile(username) {
+
+/* =========================
+   PROFILE
+========================= */
+function openProfile(username) {
   showView('profile');
-  document.getElementById('profileName').innerText = username;
+  document.getElementById("profileName").innerText = `@${username}`;
   loadPositions(username);
 }
-  async function loadPositions(username) {
+
+async function loadPositions(username) {
   const url =
-    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Positions`;
+    `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${POSITIONS_TAB}`;
 
   const res = await fetch(url);
   const text = await res.text();
@@ -169,7 +191,6 @@ html += `<p class="username" onclick="openProfile('${username}')">${username}</p
     html || "No positions yet.";
 }
 </script>
-
 
 </body>
 </html>
