@@ -181,9 +181,19 @@ async function loadPositions(username) {
     const ticker = r.c[2]?.v;
     const shares = r.c[3]?.v;
     const entry = r.c[4]?.v;
+    const current = r.c[5]?.v;
 
-    if (rowUser === username) {
-      html += `<p>${ticker} — ${shares} shares @ ${entry}</p>`;
+
+const pnl = ((current - entry) / entry * 100).toFixed(2);
+
+html += `
+  <p>
+    ${ticker} — ${shares} shares @ ${entry}
+    <strong style="margin-left:8px;">
+      (${pnl}%)
+    </strong>
+  </p>
+`;
     }
   });
 
